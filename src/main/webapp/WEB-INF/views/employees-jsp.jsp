@@ -225,8 +225,6 @@
         list-style: none;
         gap: 5px;
         flex-wrap: wrap;
-        margin: 0;
-        padding: 0;
       }
 
       .page-item {
@@ -322,6 +320,19 @@
           justify-content: center;
         }
       }
+
+      .loading {
+        text-align: center;
+        padding: 40px;
+        color: #7f8c8d;
+      }
+
+      .no-results {
+        text-align: center;
+        padding: 40px;
+        color: #95a5a6;
+        font-style: italic;
+      }
     </style>
 </head>
 <body>
@@ -402,39 +413,74 @@
         <div class="page-size-selector">
             <label for="pageSize">Records per page:</label>
             <select id="pageSize" onchange="changePageSize(this.value)">
-                <option value="5" ${pageSize == 5 ? 'selected' : ''}>5</option>
-                <option value="10" ${pageSize == 10 ? 'selected' : ''}>10</option>
-                <option value="20" ${pageSize == 20 ? 'selected' : ''}>20</option>
-                <option value="50" ${pageSize == 50 ? 'selected' : ''}>50</option>
+                <option value="5" <c:if test="${pageSize == 5}">selected</c:if>>5</option>
+                <option value="10" <c:if test="${pageSize == 10}">selected</c:if>>10</option>
+                <option value="20" <c:if test="${pageSize == 20}">selected</c:if>>20</option>
+                <option value="50" <c:if test="${pageSize == 50}">selected</c:if>>50</option>
             </select>
         </div>
 
         <nav>
             <ul class="pagination">
                 <!-- First Page -->
-                <li class="page-item ${currentPage == 0 ? 'disabled' : ''}">
+                <c:choose>
+                <c:when test="${currentPage == 0}">
+                <li class="page-item disabled">
+                    </c:when>
+                    <c:otherwise>
+                <li class="page-item">
+                    </c:otherwise>
+                    </c:choose>
                     <a href="/employees?page=0&size=${pageSize}" class="page-link">First</a>
                 </li>
 
                 <!-- Previous Page -->
-                <li class="page-item ${currentPage == 0 ? 'disabled' : ''}">
+                <c:choose>
+                <c:when test="${currentPage == 0}">
+                <li class="page-item disabled">
+                    </c:when>
+                    <c:otherwise>
+                <li class="page-item">
+                    </c:otherwise>
+                    </c:choose>
                     <a href="/employees?page=${currentPage - 1}&size=${pageSize}" class="page-link">Previous</a>
                 </li>
 
                 <!-- Page Numbers -->
                 <c:forEach begin="0" end="${totalPages - 1}" var="i">
-                    <li class="page-item ${i == currentPage ? 'active' : ''}">
-                        <a href="/employees?page=${i}&size=${pageSize}" class="page-link">${i + 1}</a>
+                    <c:choose>
+                        <c:when test="${i == currentPage}">
+                            <li class="page-item active">
+                        </c:when>
+                        <c:otherwise>
+                            <li class="page-item">
+                        </c:otherwise>
+                    </c:choose>
+                    <a href="/employees?page=${i}&size=${pageSize}" class="page-link">${i + 1}</a>
                     </li>
                 </c:forEach>
 
                 <!-- Next Page -->
-                <li class="page-item ${currentPage >= totalPages - 1 ? 'disabled' : ''}">
+                <c:choose>
+                <c:when test="${currentPage >= totalPages - 1}">
+                <li class="page-item disabled">
+                    </c:when>
+                    <c:otherwise>
+                <li class="page-item">
+                    </c:otherwise>
+                    </c:choose>
                     <a href="/employees?page=${currentPage + 1}&size=${pageSize}" class="page-link">Next</a>
                 </li>
 
                 <!-- Last Page -->
-                <li class="page-item ${currentPage >= totalPages - 1 ? 'disabled' : ''}">
+                <c:choose>
+                <c:when test="${currentPage >= totalPages - 1}">
+                <li class="page-item disabled">
+                    </c:when>
+                    <c:otherwise>
+                <li class="page-item">
+                    </c:otherwise>
+                    </c:choose>
                     <a href="/employees?page=${totalPages - 1}&size=${pageSize}" class="page-link">Last</a>
                 </li>
             </ul>
@@ -464,10 +510,11 @@
     });
 
     // Update the showing count for client-side filtering
-    const spans = document.querySelectorAll('.search-container .page-info span');
-    if (spans.length >= 3) {
-      spans[0].textContent = '1';
-      spans[1].textContent = visibleCount;
+    const startIndex = document.querySelector('.page-info span:nth-child(1)');
+    const endIndex = document.querySelector('.page-info span:nth-child(2)');
+    if (startIndex && endIndex) {
+      startIndex.textContent = '1';
+      endIndex.textContent = visibleCount;
     }
   });
 
@@ -486,7 +533,10 @@
 
   // Page size change function
   function changePageSize(size) {
-    window.location.href = '/employees?size=' + size + '&page=0';
+    const url = new URL(window.location.href);
+    url.searchParams.set('size', size);
+    url.searchParams.set('page', '0'); // Reset to first page when changing size
+    window.location.href = url.toString();
   }
 
   // Add some interactive effects
@@ -494,6 +544,7 @@
     const rows = document.querySelectorAll('.employee-table tbody tr');
     rows.forEach((row, index) => {
       row.style.animationDelay = (index * 0.05) + 's';
+      row.classList.add('fade-in');
     });
   });
 </script>
