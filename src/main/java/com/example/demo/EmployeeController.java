@@ -80,7 +80,7 @@ public class EmployeeController {
     return "employees-table-pagination";
   }
 
-/*  // JSP view with pagination
+  // JSP view with pagination
   @GetMapping("/table/pagination/jsp")
   public String getEmployeesJSP(
       @RequestParam(defaultValue = "0") int page,
@@ -123,7 +123,7 @@ public class EmployeeController {
     model.addAttribute("endIndex", end);
 
     return "employees-jsp";
-  }*/
+  }
 
   private void setTable(Model model) {
     List<Employee> employees = employeeService.getAllEmployees();

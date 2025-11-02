@@ -431,7 +431,7 @@
                 <li class="page-item">
                     </c:otherwise>
                     </c:choose>
-                    <a href="/employees?page=0&size=${pageSize}" class="page-link">First</a>
+                    <a href="/api/employee/table/pagination/jsp?page=0&size=${pageSize}" class="page-link">First</a>
                 </li>
 
                 <!-- Previous Page -->
@@ -443,7 +443,7 @@
                 <li class="page-item">
                     </c:otherwise>
                     </c:choose>
-                    <a href="/employees?page=${currentPage - 1}&size=${pageSize}" class="page-link">Previous</a>
+                    <a href="/api/employee/table/pagination/jsp?page=${currentPage - 1}&size=${pageSize}" class="page-link">Previous</a>
                 </li>
 
                 <!-- Page Numbers -->
@@ -456,7 +456,7 @@
                             <li class="page-item">
                         </c:otherwise>
                     </c:choose>
-                    <a href="/employees?page=${i}&size=${pageSize}" class="page-link">${i + 1}</a>
+                    <a href="/api/employee/table/pagination/jsp?page=${i}&size=${pageSize}" class="page-link">${i + 1}</a>
                     </li>
                 </c:forEach>
 
@@ -469,7 +469,7 @@
                 <li class="page-item">
                     </c:otherwise>
                     </c:choose>
-                    <a href="/employees?page=${currentPage + 1}&size=${pageSize}" class="page-link">Next</a>
+                    <a href="/api/employee/table/pagination/jsp?page=${currentPage + 1}&size=${pageSize}" class="page-link">Next</a>
                 </li>
 
                 <!-- Last Page -->
@@ -481,7 +481,7 @@
                 <li class="page-item">
                     </c:otherwise>
                     </c:choose>
-                    <a href="/employees?page=${totalPages - 1}&size=${pageSize}" class="page-link">Last</a>
+                    <a href="/api/employee/table/pagination/jsp?page=${totalPages - 1}&size=${pageSize}" class="page-link">Last</a>
                 </li>
             </ul>
         </nav>
