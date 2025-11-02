@@ -80,6 +80,51 @@ public class EmployeeController {
     return "employees-table-pagination";
   }
 
+  // JSP view with pagination
+  @GetMapping("/table/pagination/jsp")
+  public String getEmployeesJSP(
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size,
+      Model model) {
+
+    List<Employee> allEmployees = employeeService.getAllEmployees();
+
+    // Calculate statistics (for all employees)
+    long departmentCount = allEmployees.stream()
+        .map(Employee::getDepartment)
+        .distinct()
+        .count();
+
+    long positionCount = allEmployees.stream()
+        .map(Employee::getPosition)
+        .distinct()
+        .count();
+
+    // Manual pagination logic
+    int totalEmployees = allEmployees.size();
+    int totalPages = (int) Math.ceil((double) totalEmployees / size);
+
+    // Ensure page is within bounds
+    if (page < 0) page = 0;
+    if (page >= totalPages) page = totalPages - 1;
+
+    int start = page * size;
+    int end = Math.min(start + size, totalEmployees);
+    List<Employee> employeesPage = allEmployees.subList(start, end);
+
+    model.addAttribute("employees", employeesPage);
+    model.addAttribute("totalEmployees", totalEmployees);
+    model.addAttribute("departmentCount", departmentCount);
+    model.addAttribute("positionCount", positionCount);
+    model.addAttribute("currentPage", page);
+    model.addAttribute("pageSize", size);
+    model.addAttribute("totalPages", totalPages);
+    model.addAttribute("startIndex", start + 1);
+    model.addAttribute("endIndex", end);
+
+    return "employees";
+  }
+
   private void setTable(Model model) {
     List<Employee> employees = employeeService.getAllEmployees();
 
